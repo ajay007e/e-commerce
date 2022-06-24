@@ -1,0 +1,60 @@
+<section>
+  <div class="container mt-5 m">
+    <form id="checkout-form">
+      <div class="row">
+
+        <div class="col-md-6">
+          <div class="mt-4">
+            <input type="text" name="userId" value="{{user._id}}" hidden />
+            <label for="">Address</label>
+            <input class="form-control" type="text" name="address" />
+            <label for="">Pincode</label>
+            <input class="form-control" type="text" name="pincode" />
+            <label for="">Mobile</label>
+            <input class="form-control" type="number" name="mobile" />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="mt-5 ml-5 container">
+            <h5 class="text-center">Total Amount : Rs. {{total}}</h5>
+            <hr />
+            <div style="border: 2px solid;padding:1rem" class="checkout">
+              <p>Payment Method</p>
+              <div class="ml-5">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    value="online-payment"
+                    name="paymentMethod"
+                    id="flexRadioDefault1"
+                  />
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    Online Payment
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    value="cod"
+                    name="paymentMethod"
+                    id="flexRadioDefault2"
+                    checked
+                  />
+                  <label class="form-check-label" for="flexRadioDefault2">
+                    COD
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            style="width: 50%;"
+            class="btn btn-success float-right mt-5 mr-5"
+          >CheckOut</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>

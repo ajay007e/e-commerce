@@ -1,0 +1,38 @@
+<section>
+  <div class="container mt-5">
+    {{#if orders}}
+    <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Date</th>
+          <th scope="col">Address</th>
+          <th scope="col">Pincode</th>
+          <th scope="col">Mobile</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Payment</th>
+          <th scope="col">Status</th>
+          <th></th>
+        </tr>
+      </thead>
+        {{#each orders}}
+      <tbody>
+          <tr>
+            <th scope="row">{{this.date}}</th>
+            <td>{{this.deliveryDetails.address}}</td>
+            <td>{{this.deliveryDetails.pincode}}</td>
+            <td>{{this.deliveryDetails.mobile}}</td>
+            <td>{{this.totalAmount}}</td>
+            <td>{{this.paymentMethod}}</td>
+            <td>{{this.status}}</td>
+            <td><a
+                href="/view-order-products/{{this._id}}"
+                class="btn btn-primary"
+              >View Product</a></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{else}}<h2 class="text-center text-secondary">No Orders</h2>
+    {{/if}}
+  </div>
+</section>
