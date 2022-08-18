@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
-/* GET home page. */
+/* GET users listing. */
 router.get("/", function (req, res, next) {
   products = [
     { img: "https://miro.medium.com/max/1400/0*rZecOAy_WVr16810" },
@@ -18,10 +18,16 @@ router.get("/", function (req, res, next) {
       img: "https://i.pinimg.com/564x/76/13/a3/7613a3e7da6c742c9af9418233cfa255.jpg",
     },
   ];
-  res.render("user/index", {
-    title: "Home",
-    products,
-  });
+  res.render("admin/view-products", { title: "Admin", admin: true, products });
+});
+
+router.get("/add-product", function (req, res, next) {
+  
+  res.render("admin/add-product", { title: "Add Product", admin: true });
+});
+
+router.post("/add-product", function (req, res, next) {
+  console.log(req.body,req.files)
 });
 
 module.exports = router;

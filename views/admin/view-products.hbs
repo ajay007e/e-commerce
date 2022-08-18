@@ -1,0 +1,36 @@
+<section>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3"><a
+          class="btn btn-primary m-5 "
+          style="margin: auto;"
+          href="/admin/add-product"
+        >Add Product</a></div>
+    </div>
+    <table class="table text-center">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Name</th>
+          <th scope="col">Category</th>
+          <th scope="col">Price</th>
+          <th scope="col">Description</th>
+          <th scope="col">Image</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each products}}
+          <tr>
+            <th scope="row"></th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+            <td>Otto</td>
+            <td><img style="width: 50px;" src="{{this.img}}" alt="" /></td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</section>

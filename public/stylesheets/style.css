@@ -4,3 +4,6 @@ body {
 }
 
 
+.float-right{
+  float: left;
+}
