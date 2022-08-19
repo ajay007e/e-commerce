@@ -23,11 +23,11 @@
         {{#each products}}
           <tr>
             <th scope="row"></th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            <td>Otto</td>
-            <td><img style="width: 50px;" src="{{this.img}}" alt="" /></td>
+            <td>{{this.name}}</td>
+            <td>{{this.category}}</td>
+            <td>{{this.price}}</td>
+            <td>{{this.description}}</td>
+            <td><img style="width: 50px;" src="/product-images/{{this._id}}.jpg" alt="" /></td>
           </tr>
         {{/each}}
       </tbody>
