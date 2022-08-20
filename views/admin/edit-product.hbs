@@ -1,0 +1,65 @@
+<div class="container">
+  <div class="row mt-4">
+    <h3 class="text-center col-md-12">Edit Product</h3>
+    <form
+      class="col-md-6"
+      method="post"
+      action="/admin/edit-product"
+      enctype="multipart/form-data"
+    >
+      <div class="mb-3 col-md-12">
+        <input type="text" hidden value="{{product._id}}" name="id" />
+        <label class="form-label">Name</label>
+        <input
+          name="name"
+          type="text"
+          value="{{product.name}}"
+          class="form-control"
+        />
+      </div>
+      <div class="mb-3 col-md-12">
+        <label class="form-label">Category</label>
+        <input
+          name="category"
+          type="text"
+          value="{{product.category}}"
+          class="form-control"
+        />
+      </div>
+      <div class="mb-3 col-md-12">
+        <label class="form-label">Price</label>
+        <input
+          name="price"
+          type="number"
+          value="{{product.price}}"
+          class="form-control"
+        />
+      </div>
+      <div class="mb-3 col-md-12">
+        <label class="form-label">Description</label>
+        <input
+          name="description"
+          type="text"
+          value="{{product.description}}"
+          class="form-control pb-5"
+        />
+      </div>
+      <div class="mb-3 col-md-12">
+
+        <label class="form-label">Image</label>
+        <input name="image" type="file" class="form-control" />
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <div class="col-md-6 text-center">
+      <img
+        style="width: 100%;"
+        src="/product-images/{{product._id}}.jpg"
+        alt="image"
+        srcset=""
+      />
+    </div>
+
+  </div>
+</div>

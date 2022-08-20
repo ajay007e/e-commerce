@@ -6,11 +6,13 @@ var logger = require("morgan");
 
 var hbs = require("express-handlebars");
 var fileUpload = require("express-fileupload");
+var session = require("express-session");
 
 var db = require("./config/connection");
 
 var adminRouter = require("./routes/admin");
 var usersRouter = require("./routes/users");
+const { Cookie } = require("express-session");
 
 var app = express();
 
@@ -39,6 +41,14 @@ db.connect((err) => {
   if (err) console.error("Error connecting to database", err);
   else console.log("Connected to database at port 27017");
 });
+app.use(
+  session({
+    secret: "secret",
+    cookie: { maxAge: 60*60*1000*24 },
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 app.use("/", usersRouter);
 app.use("/admin", adminRouter);
