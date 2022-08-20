@@ -47,13 +47,22 @@
       <div class="mb-3 col-md-12">
 
         <label class="form-label">Image</label>
-        <input name="image" type="file" class="form-control" />
+        <input
+          onchange="showImage(event)"
+          name="image"
+          type="file"
+          class="form-control"
+        />
       </div>
 
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-    <div class="col-md-6 text-center">
+    <div
+      class="col-md-6 text-center"
+      style=";height:20rem;width:20rem;object-fit:cover;overflow:hidden"
+    >
       <img
+        id="proImg"
         style="width: 100%;"
         src="/product-images/{{product._id}}.jpg"
         alt="image"
@@ -63,3 +72,8 @@
 
   </div>
 </div>
+
+<script>
+  function showImage(e) { document.getElementById("proImg").src =
+  URL.createObjectURL(e.target.files[0]) }
+</script>

@@ -1,33 +1,58 @@
 <div class="container">
   <div class="row mt-4">
-    <h3 class="text-center">Add Product</h3>
+    <h3 class="text-center col-md-12">Add Product</h3>
     <form
+      class="col-md-6"
       method="post"
       action="/admin/add-product"
       enctype="multipart/form-data"
     >
-      <div class="mb-3 col-md-6">
+      <div class="mb-3 col-md-12">
         <label class="form-label">Name</label>
         <input name="name" type="text" class="form-control" />
       </div>
-      <div class="mb-3 col-md-6">
+      <div class="mb-3 col-md-12">
         <label class="form-label">Category</label>
         <input name="category" type="text" class="form-control" />
       </div>
-      <div class="mb-3 col-md-6">
+      <div class="mb-3 col-md-12">
         <label class="form-label">Price</label>
         <input name="price" type="number" class="form-control" />
       </div>
-      <div class="mb-3 col-md-6">
+      <div class="mb-3 col-md-12">
         <label class="form-label">Description</label>
         <input name="description" type="text" class="form-control pb-5" />
       </div>
-      <div class="mb-3 col-md-6">
+      <div class="mb-3 col-md-12">
         <label class="form-label">Image</label>
-        <input name="image" type="file" class="form-control" />
+        <input
+          onchange="showImage(event)"
+          name="image"
+          type="file"
+          class="form-control"
+        />
       </div>
 
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
+    <div
+      class="col-md-6 text-center m-5"
+      style=";height:20rem;width:20rem;object-fit:cover;overflow:hidden"
+    >
+      <img
+        hidden
+        id="proImg"
+        style="width: 100%;"
+        src=""
+        alt=""
+        srcset=""
+      />
+    </div>
   </div>
 </div>
+
+<script>
+  function showImage(e) { document.getElementById("proImg").src =
+  URL.createObjectURL(e.target.files[0]);
+  document.getElementById("proImg").removeAttribute("hidden")}
+</script>

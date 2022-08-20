@@ -46,6 +46,9 @@ router.get("/register", function (req, res, next) {
 router.post("/signup", function (req, res, next) {
   userHelpers.doSignup(req.body).then((response) => {
     // console.log(JSON.parse(JSON.stringify(response)));
+    req.session.loggedIn = true;
+    req.session.user = req.body;
+    req.session.user._id = response.insertedId;
     if (response) res.redirect("/");
   });
 });
@@ -63,9 +66,18 @@ router.post("/login", function (req, res, next) {
   });
 });
 
-router.get("/cart", verifyLogin, function (req, res, next) {
+router.get("/cart", verifyLogin, async function (req, res, next) {
+  let cartProducts = await userHelpers.getCartProducts(req.session.user._id);
   res.render("user/cart", {
     title: "Cart",
+    cartProducts,
+  });
+});
+
+router.get("/add-to-cart/:id", verifyLogin, function (req, res, next) {
+  let proId = req.params.id;
+  userHelpers.addToCart(proId, req.session.user._id).then(() => {
+    res.redirect("/");
   });
 });
 
