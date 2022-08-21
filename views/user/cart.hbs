@@ -42,13 +42,13 @@
                             <button
                               style="height: 30px;width:30px;line-height: 30px;"
                               class="border rounded-circle"
-                              onclick="changeQuantity('{{this._id}}','{{this.item}}',-1)"
+                              onclick="changeQuantity('{{this._id}}','{{this.item}}',-1,'{{../user._id}}')"
                             >-</button>
                             <h5 id="{{this.product._id}}" class="fw-normal m-3">{{this.quantity}}</h5>
                             <button
                               style="height: 30px;width:30px;line-height: 30px;"
                               class="border rounded-circle"
-                              onclick="changeQuantity('{{this._id}}','{{this.item}}',1)"
+                              onclick="changeQuantity('{{this._id}}','{{this.item}}',1,'{{../user._id}}')"
                             >+</button>
                           </div>
                           <div class="d-flex flex-row align-items-center ord-3">
@@ -79,7 +79,7 @@
                     </div>
                     <div class="d-flex justify-content-between mb-4">
                       <p class="mb-2">Total(Incl. taxes)</p>
-                      <h5 class="mb-2">${{obj.total}}</h5>
+                      <h5 class="mb-2">$<span id="total">{{obj.total}}</span></h5>
                     </div>
                     <div class="d-flex justify-content-center">
                       <a href="/place-order" type="" class="btn btn-success">Go To

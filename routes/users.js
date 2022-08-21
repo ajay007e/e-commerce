@@ -75,7 +75,7 @@ router.post("/login", function (req, res, next) {
 router.get("/cart", verifyLogin, async function (req, res, next) {
   let cartProducts = await userHelpers.getCartProducts(req.session.user._id);
   let total = await userHelpers.getTotalPrice(req.session.user._id);
-  let obj = {subtotal:total,del:20,total:total+20}
+  let obj = {total:total}
   res.render("user/cart", {
     title: "Cart",
     cartProducts,
@@ -93,22 +93,32 @@ router.get("/add-to-cart/:id", function (req, res, next) {
 });
 
 router.post("/change-cart-quantity",(req,res,next)=>{
-  userHelpers.changeCartQuantity(req.body).then((response)=>{
-    console.log(response);
+  userHelpers.changeCartQuantity(req.body).then(async(response)=>{
+    response.total = await userHelpers.getTotalPrice(req.session.user._id)
     res.json(response)
   })
 })
 
 router.post("/delete-cart-item", (req, res, next) => {
   userHelpers.deleteCartItem(req.body).then((response) => {
-    console.log(response);
     res.json(response);
   });
 });
 
 router.get("/place-order",verifyLogin,async function (req, res, next) {
   let total = await userHelpers.getTotalPrice(req.session.user._id)
-  res.render("user/place-order",{title:"Place Order",total})
+  res.render("user/place-order",{title:"Place Order",total,user:req.session.user})
 });
+
+router.post("/place-order",async(req,res,next)=>{
+  // console.log(req.body);
+  let orderList = await userHelpers.getOrderList(req.body.userId)
+  let total = await userHelpers.getTotalPrice(req.session.user._id)
+  userHelpers.placeOrder(req.body, orderList,total).then((response) => {
+    res.json({status: true});
+  });
+  
+});
+
 
 module.exports = router;
