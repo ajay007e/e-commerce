@@ -74,10 +74,13 @@ router.post("/login", function (req, res, next) {
 
 router.get("/cart", verifyLogin, async function (req, res, next) {
   let cartProducts = await userHelpers.getCartProducts(req.session.user._id);
+  let total = await userHelpers.getTotalPrice(req.session.user._id);
+  let obj = {subtotal:total,del:20,total:total+20}
   res.render("user/cart", {
     title: "Cart",
     cartProducts,
     user: req.session.user,
+    obj
   });
 });
 
@@ -95,5 +98,17 @@ router.post("/change-cart-quantity",(req,res,next)=>{
     res.json(response)
   })
 })
+
+router.post("/delete-cart-item", (req, res, next) => {
+  userHelpers.deleteCartItem(req.body).then((response) => {
+    console.log(response);
+    res.json(response);
+  });
+});
+
+router.get("/place-order",verifyLogin,async function (req, res, next) {
+  let total = await userHelpers.getTotalPrice(req.session.user._id)
+  res.render("user/place-order",{title:"Place Order",total})
+});
 
 module.exports = router;

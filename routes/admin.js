@@ -20,6 +20,7 @@ router.get("/add-product", function (req, res, next) {
 });
 
 router.post("/add-product", function (req, res, next) {
+  req.body.price = parseInt(req.body.price);
   productHelpers.addProduct(req.body, (id) => {
     let img = req.files.image;
     img.mv("./public/product-images/" + id + ".jpg", (err, done) => {
@@ -43,12 +44,14 @@ router.get("/delete-product/:id", function (req, res, next) {
 
 router.get("/edit-product/", function (req, res, next) {
   proId = req.query.id;
+
   productHelpers.getProduct(proId).then((product) => {
     res.render("admin/edit-product", { admin: true, product });
   });
 });
 
 router.post("/edit-product", function (req, res, next) {
+  req.body.price = parseInt(req.body.price)
   productHelpers.editProduct(req.body).then(() => {
     try {
       img = req.files.image;

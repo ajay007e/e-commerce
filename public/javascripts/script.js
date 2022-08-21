@@ -30,3 +30,13 @@ function changeQuantity(cartId, proId, count) {
     },
   });
 }
+
+function deleteCartItem(cartId,prodId){
+  $.ajax({
+    url: "/delete-cart-item",
+    method: "post",
+    data: { cart: cartId, prod: prodId },
+    success: (res) => {
+      if(res.status) location.reload();
+    }})
+}
