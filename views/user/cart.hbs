@@ -1,0 +1,96 @@
+<section class="">
+  <h1 class="text-center m-5">Cart</h1>
+  <div class="container">
+    <div class="row d-flex justify-content-center align-items-center">
+      <div class="col">
+        <div class="card">
+          <div class="card-body p-4">
+            <div class="row">
+              <div class="col-lg-8">
+
+               
+
+                {{#each cartProducts}}
+                    <div class="card mb-3">
+                      <div class="card-body position-relative">
+                        <div > 
+                          <span style="height: 20px;width: 20px;"  class="position-absolute top-0 start-100 translate-middle p-3 bg-danger border rounded-circle">
+                          <button style="border:none;outline:none;background-color: transparent;top: 10%;left: 15%" class="position-absolute ">X  
+                          </button>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                          <div class="d-flex flex-row align-items-center ord-1">
+                            <div
+                              class="rounded-3"
+                              style="height:75px;width:75px;object-fit:cover;overflow:hidden"
+                            >
+                              <img
+                                src="/product-images/{{this.product._id}}.jpg"
+                                class="img-fluid"
+                                alt="Shopping item"
+                                style="width: 65px;"
+                              />
+                            </div>
+                            <div class="ms-3">
+                              <h5>{{this.product.name}}</h5>
+                              <p class="small mb-0">{{this.product.desciption}}</p>
+                            </div>
+                          </div>
+                          
+                          <div class="d-flex flex-row align-items-center ord-2">
+                            <button
+                              style="height: 30px;width:30px;line-height: 30px;"
+                              class="border rounded-circle"
+                              onclick="changeQuantity('{{this._id}}','{{this.item}}',-1)"
+                            >-</button>
+                            <h5 id="{{this.product._id}}" class="fw-normal m-3">{{this.quantity}}</h5>
+                            <button
+                              style="height: 30px;width:30px;line-height: 30px;"
+                              class="border rounded-circle"
+                              onclick="changeQuantity('{{this._id}}','{{this.item}}',1)"
+                            >+</button>
+                          </div>
+                          <div class="d-flex flex-row align-items-center ord-3">
+                            <div style="width: 80px;">
+                              <h5 class="mb-0">$ {{this.product.price}}</h5>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                {{/each}}
+
+                <hr />
+                <a href="/" class="text-body">Continue shopping</a>
+              </div>
+              <div class="col-lg-4">
+                <div class="card rounded-3">
+                  <div class="card-body">
+                    <h4>Summary</h4>
+                    <hr class="my-4" />
+                    <div class="d-flex justify-content-between">
+                      <p class="mb-2">Subtotal</p>
+                      <p class="mb-2">$4798.00</p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                      <p class="mb-2">Shipping</p>
+                      <p class="mb-2">$20.00</p>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4">
+                      <p class="mb-2">Total(Incl. taxes)</p>
+                      <h5 class="mb-2">$4818.00</h5>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                      <button type="button" class="btn btn-success">Go To
+                        Checkout</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
