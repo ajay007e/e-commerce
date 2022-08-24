@@ -1,3 +1,4 @@
+require("dotenv").config();
 var createError = require("http-errors");
 var express = require("express");
 var path = require("path");
@@ -13,6 +14,7 @@ var db = require("./config/connection");
 var adminRouter = require("./routes/admin");
 var usersRouter = require("./routes/users");
 const { Cookie } = require("express-session");
+
 
 var app = express();
 

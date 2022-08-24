@@ -3,6 +3,13 @@ var collections = require("../config/collection");
 var objectID = require("mongodb").ObjectId;
 
 const bcrypt = require("bcrypt");
+const Razorpay = require("razorpay");
+
+var instance = new Razorpay({
+  key_id: process.env.RAZORPAY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECREAT,
+});
+
 
 module.exports = {
   doSignup: (userData) => {
@@ -55,7 +62,6 @@ module.exports = {
         let proExists = userCart.products.findIndex(
           (products) => products.item == proId
         );
-        console.log(proExists);
         if (proExists != -1) {
           db.get()
             .collection(collections.CARTS_COLLECTION)
@@ -143,7 +149,6 @@ module.exports = {
         ])
         .toArray();
       try {
-        // console.log(cartItems);
         resolve(cartItems);
       } catch (error) {
         resolve([]);
@@ -164,12 +169,12 @@ module.exports = {
       }
     });
   },
+
   changeCartQuantity: (details) => {
     return new Promise((resolve, reject) => {
       details.count = parseInt(details.count);
       details.quantity = parseInt(details.quantity);
       if (details.count === -1 && details.quantity === 1) {
-        // console.log(details.count, details.quantity, details.product);
         db.get()
           .collection(collections.CARTS_COLLECTION)
           .updateOne(
@@ -209,11 +214,11 @@ module.exports = {
           }
         )
         .then((res) => {
-          console.log(res);
           resolve({ status: true, removeProduct: true });
         });
     });
   },
+
   getTotalPrice: (userId) => {
     return new Promise(async (resolve, reject) => {
       let totalPrice = await db
@@ -255,16 +260,15 @@ module.exports = {
           },
         ])
         .toArray();
-      if (totalPrice) {
-        console.log(totalPrice.length === 0);
+      if (totalPrice[0]?.total) {
+        resolve(totalPrice[0].total);
+      } else {
         resolve(0);
       }
-      else{ resolve(totalPrice[0].total);}
     });
   },
 
   placeOrder: (details, products, total) => {
-    // console.log("placeOrder");
     return new Promise(async (resolve, reject) => {
       let status = details.mode === "cod" ? "placed" : "pending";
       let orderObj = {
@@ -279,19 +283,17 @@ module.exports = {
         paymentMethod: details.mode,
         products: products,
         total: total,
-        date:new Date()
+        date: new Date(),
       };
 
       db.get()
         .collection(collections.ORDERS_COLLECTION)
         .insertOne(orderObj)
         .then((res) => {
-          // console.log("order Placed");
           db.get()
             .collection(collections.CARTS_COLLECTION)
             .deleteOne({ user: objectID(details.userId) });
-          // console.log("cart cleared");
-          resolve();
+          resolve(res.insertedId);
         });
     });
   },
@@ -302,7 +304,115 @@ module.exports = {
         .get()
         .collection(collections.CARTS_COLLECTION)
         .findOne({ user: objectID(userId) });
-      resolve(cart.products);
+      try {
+        resolve(cart.products);
+      } catch (error) {
+        resolve([])
+      }
+    });
+  },
+
+  getOrders: (userId) => {
+    return new Promise(async (resolve, reject) => {
+      let orders = await db
+        .get()
+        .collection(collections.ORDERS_COLLECTION)
+        .find()
+        .toArray();
+      resolve(orders);
+    });
+  },
+
+  getOrder: (id) => {
+    return new Promise(async (resolve, reject) => {
+      let orderItems = await db
+        .get()
+        .collection(collections.ORDERS_COLLECTION)
+        .aggregate([
+          {
+            $match: { _id: objectID(id) },
+          },
+          {
+            $unwind: "$products",
+          },
+          {
+            $project: {
+              item: "$products.item",
+              quantity: "$products.quantity",
+            },
+          },
+          {
+            $lookup: {
+              from: collections.PRODUCTS_COLLECTION,
+              localField: "item",
+              foreignField: "_id",
+              as: "product",
+            },
+          },
+          {
+            $project: {
+              item: 1,
+              quantity: 1,
+              product: { $arrayElemAt: ["$product", 0] },
+            },
+          },
+        ])
+        .toArray();
+      try {
+        resolve(orderItems);
+      } catch (error) {
+        resolve([]);
+      }
+    });
+  },
+
+  generateRazopay: (orderId, total) => {
+    return new Promise((resolve, reject) => {
+      var options = {
+        amount: total * 100, // amount in the smallest currency unit
+        currency: "INR",
+        receipt: "" + orderId,
+      };
+      instance.orders.create(options, function (err, order) {
+        if (!err) {
+          order.r_id = process.env.RAZORPAY_ID;
+          resolve(order);
+        }
+      });
+    });
+  },
+
+  verifyPayment: (details) => {
+    return new Promise((resolve, reject) => {
+      const crypto = require("crypto");
+      let hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECREAT);
+      hmac.update(
+        details["payment[razorpay_order_id]"] +
+          "|" +
+          details["payment[razorpay_payment_id]"]
+      );
+      hmac = hmac.digest("hex");
+      if (hmac === details["payment[razorpay_signature]"]) {
+        resolve();
+      } else {
+        reject();
+      }
+    });
+  },
+  
+  changePaymentStatus: (orderId) => {
+    return new Promise((resolve, reject) => {
+      db.get()
+        .collection(collections.ORDERS_COLLECTION)
+        .updateOne(
+          { _id: objectID(orderId) },
+          {
+            $set: { status: "placed" },
+          }
+        )
+        .then(() => {
+          resolve();
+        });
     });
   },
 };

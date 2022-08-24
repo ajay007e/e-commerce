@@ -1,6 +1,5 @@
 var db = require("../config/connection");
 var collections = require("../config/collection");
-const collection = require("../config/collection");
 var objectID = require("mongodb").ObjectId;
 
 module.exports = {
@@ -59,7 +58,7 @@ module.exports = {
   getProduct: (id) => {
     return new Promise(async (resolve, reject) => {
       db.get()
-        .collection(collection.PRODUCTS_COLLECTION)
+        .collection(collections.PRODUCTS_COLLECTION)
         .findOne({ _id: objectID(id) })
         .then((res) => {
           resolve(res);
