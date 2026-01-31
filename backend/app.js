@@ -13,8 +13,11 @@ var db = require("./config/connection");
 
 var adminRouter = require("./routes/admin");
 var usersRouter = require("./routes/users");
-const { Cookie } = require("express-session");
 
+const apiAdminRouter = require("./api/routes/admin.routes");
+const apiUserRouter = require("./api/routes/user.routes");
+
+const { Cookie } = require("express-session");
 
 var app = express();
 
@@ -29,7 +32,7 @@ app.engine(
     defaultLayout: "layout",
     layoutDir: __dirname + "/views/layout/",
     partialsDir: __dirname + "/views/partials/",
-  })
+  }),
 );
 
 app.use(logger("dev"));
@@ -46,14 +49,16 @@ db.connect((err) => {
 app.use(
   session({
     secret: "secret",
-    cookie: { maxAge: 60*60*1000*24 },
+    cookie: { maxAge: 60 * 60 * 1000 * 24 },
     resave: true,
     saveUninitialized: true,
-  })
+  }),
 );
 
 app.use("/", usersRouter);
 app.use("/admin", adminRouter);
+app.use("/api/user", apiUserRouter);
+app.use("/api/admin", apiAdminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
