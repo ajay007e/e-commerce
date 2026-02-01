@@ -20,19 +20,19 @@ export const NAV_LINKS: NavLink[] = [
     children: [
       {
         label: "Men",
-        path: "/shop/men",
+        path: "/s/men",
       },
       {
         label: "Women",
-        path: "/shop/women",
+        path: "/s/women",
       },
       {
         label: "Kids",
-        path: "/shop/kids",
+        path: "/s/kids",
       },
       {
         label: "Accessories",
-        path: "/shop/accessories",
+        path: "/s/accessories",
       },
     ],
   },

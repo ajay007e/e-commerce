@@ -10,6 +10,8 @@ import Landing from "@/pages/Landing";
 import Login from "@/pages/Login";
 import ForgetPasswordPage from "@/pages/ForgetPasswordPage";
 import Cart from "@/pages/Cart";
+import ShopPage from "@/pages/ShopPage";
+import ProductPage from "@/pages/ProductPage";
 import AboutPage from "@/pages/AboutPage";
 import ContactPage from "@/pages/ContactPage";
 import RefundAndReturnPolicyPage from "@/pages/RefundAndReturnPolicyPage";
@@ -35,6 +37,8 @@ export default function App() {
             <Route path="/terms" element={<TermsAndConditionsPage />} />
             <Route path="/shipping" element={<ShippingPolicyPage />} />
             <Route path="/refund" element={<RefundAndReturnPolicyPage />} />
+            <Route path="/p/:productId" element={<ProductPage />} />{" "}
+            <Route path="/s" element={<ShopPage />} />
             <Route
               path="/return-policy"
               element={<RefundAndReturnPolicyPage />}
