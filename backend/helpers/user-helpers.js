@@ -10,7 +10,6 @@ var instance = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECREAT,
 });
 
-
 module.exports = {
   doSignup: (userData) => {
     return new Promise(async (resolve, reject) => {
@@ -24,7 +23,19 @@ module.exports = {
         });
     });
   },
+  doAdminSignup: (userData) => {
+    return new Promise(async (resolve, reject) => {
+      userData.password = await bcrypt.hash(userData.password, 10);
+      userData.isAdmin = true;
 
+      db.get()
+        .collection(collections.USERS_COLLECTION)
+        .insertOne(userData)
+        .then((result) => {
+          resolve(result);
+        });
+    });
+  },
   doLogin: (userData) => {
     return new Promise(async (resolve, reject) => {
       loginStatus = false;
@@ -60,14 +71,14 @@ module.exports = {
         .findOne({ user: objectID(userId) });
       if (userCart) {
         let proExists = userCart.products.findIndex(
-          (products) => products.item == proId
+          (products) => products.item == proId,
         );
         if (proExists != -1) {
           db.get()
             .collection(collections.CARTS_COLLECTION)
             .updateOne(
               { user: objectID(userId), "products.item": objectID(proId) },
-              { $inc: { "products.$.quantity": 1 } }
+              { $inc: { "products.$.quantity": 1 } },
             )
             .then(() => {
               resolve();
@@ -79,7 +90,7 @@ module.exports = {
               { user: objectID(userId) },
               {
                 $push: { products: proObj },
-              }
+              },
             )
             .then((res) => {
               resolve();
@@ -181,7 +192,7 @@ module.exports = {
             { _id: objectID(details.cart) },
             {
               $pull: { products: { item: objectID(details.product) } },
-            }
+            },
           )
           .then((res) => {
             resolve({ status: true, removeProduct: true });
@@ -194,7 +205,7 @@ module.exports = {
               _id: objectID(details.cart),
               "products.item": objectID(details.product),
             },
-            { $inc: { "products.$.quantity": details.count } }
+            { $inc: { "products.$.quantity": details.count } },
           )
           .then((res) => {
             resolve({ status: true });
@@ -211,7 +222,7 @@ module.exports = {
           { _id: objectID(cart) },
           {
             $pull: { products: { item: objectID(prod) } },
-          }
+          },
         )
         .then((res) => {
           resolve({ status: true, removeProduct: true });
@@ -307,7 +318,7 @@ module.exports = {
       try {
         resolve(cart.products);
       } catch (error) {
-        resolve([])
+        resolve([]);
       }
     });
   },
@@ -389,7 +400,7 @@ module.exports = {
       hmac.update(
         details["payment[razorpay_order_id]"] +
           "|" +
-          details["payment[razorpay_payment_id]"]
+          details["payment[razorpay_payment_id]"],
       );
       hmac = hmac.digest("hex");
       if (hmac === details["payment[razorpay_signature]"]) {
@@ -399,7 +410,7 @@ module.exports = {
       }
     });
   },
-  
+
   changePaymentStatus: (orderId) => {
     return new Promise((resolve, reject) => {
       db.get()
@@ -408,7 +419,7 @@ module.exports = {
           { _id: objectID(orderId) },
           {
             $set: { status: "placed" },
-          }
+          },
         )
         .then(() => {
           resolve();

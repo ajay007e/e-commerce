@@ -1,6 +1,9 @@
 import api from "./axios";
 import type { ApiResponse, User, LoginPayload } from "@/types";
 
+export const me = () => {
+  return api.get("/api/users/me");
+};
 export const login = (data: LoginPayload) => {
   return api.post<ApiResponse<User>>("/api/users/login", data);
 };

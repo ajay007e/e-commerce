@@ -4,6 +4,7 @@ const { verifyLogin } = require("../middlewares/auth.middleware");
 
 router.get("/", controller.getHome);
 
+router.get("/me", controller.getMe);
 router.post("/signup", controller.signup);
 router.post("/login", controller.login);
 router.post("/logout", controller.logout);

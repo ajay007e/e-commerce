@@ -1,21 +1,14 @@
 import { Navigate } from "react-router-dom";
-import { ReactNode } from "react";
 import { useAuth } from "@/context/auth.context";
-import type { RouteGuardProps } from "./routes.types";
 
-export default function PublicRoute({ children }: RouteGuardProps) {
+export default function PublicRoute({ children }: { children: JSX.Element }) {
   const { user, loading } = useAuth();
 
-  // ⏳ Still checking session
-  if (loading) {
-    return null; // spinner later
-  }
+  if (loading) return null;
 
-  // ❌ Already logged in
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={user.isAdmin ? "/admin" : "/app"} replace />;
   }
 
-  // ✅ Guest user
-  return <>{children}</>;
+  return children;
 }

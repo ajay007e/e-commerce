@@ -3,4 +3,5 @@ module.exports = {
   USERS_COLLECTION: "users",
   CARTS_COLLECTION: "carts",
   ORDERS_COLLECTION: "orders",
+  CONFIGS_COLLECTION: "configs",
 };

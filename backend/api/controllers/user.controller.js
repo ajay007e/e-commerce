@@ -27,22 +27,41 @@ exports.getHome = async (req, res) => {
   }
 };
 
+exports.getMe = (req, res) => {
+  if (req.session && req.session.user) {
+    const { id, name, email, isAdmin } = req.session.user;
+    return res.status(200).json({
+      success: true,
+      user: { id, name, email, isAdmin },
+    });
+  }
+
+  return res.status(401).json({
+    success: false,
+    message: "Not authenticated",
+  });
+};
+
 /**
  * POST /signup
  */
 exports.signup = async (req, res) => {
   try {
     const response = await userHelpers.doSignup(req.body);
+    const { name, email, isAdmin = false } = req.body;
+    const user = {
+      name,
+      email,
+      isAdmin,
+      id: response.insertedId,
+    };
 
     req.session.loggedIn = true;
-    req.session.user = {
-      ...req.body,
-      _id: response.insertedId,
-    };
+    req.session.user = user;
 
     res.json({
       success: true,
-      userId: response.insertedId,
+      user,
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -57,12 +76,14 @@ exports.login = async (req, res) => {
     const response = await userHelpers.doLogin(req.body);
 
     if (response.status) {
+      const { _id: id, name, email, isAdmin = false } = response.user;
+      const user = { id, name, email, isAdmin };
       req.session.loggedIn = true;
-      req.session.user = response.user;
+      req.session.user = user;
 
       res.json({
         success: true,
-        user: response.user,
+        user,
       });
     } else {
       res.status(401).json({

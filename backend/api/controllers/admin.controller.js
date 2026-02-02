@@ -1,5 +1,29 @@
 const fs = require("fs");
 const productHelpers = require("../../helpers/product-helpers");
+const userHelpers = require("../../helpers/user-helpers");
+
+exports.onboard = async (req, res) => {
+  try {
+    const response = await userHelpers.doAdminSignup(req.body);
+    const { name, email, isAdmin = true } = req.body;
+    const user = {
+      name,
+      email,
+      isAdmin,
+      id: response.insertedId,
+    };
+
+    req.session.loggedIn = true;
+    req.session.user = user;
+
+    res.json({
+      success: true,
+      user,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
 exports.getAllProducts = async (req, res, next) => {
   try {

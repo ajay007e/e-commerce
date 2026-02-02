@@ -17,6 +17,7 @@ export function ModeSwitch({ mode, onSwitch }: ModeSwitchProps) {
         <>
           Already have an account?{" "}
           <button
+            type="button"
             onClick={() => onSwitch("login")}
             className="font-medium text-neutral-900 hover:underline cursor-pointer"
           >

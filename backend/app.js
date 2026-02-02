@@ -4,6 +4,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const cors = require("cors");
 
 var hbs = require("express-handlebars");
 var fileUpload = require("express-fileupload");
@@ -16,11 +17,23 @@ var usersRouter = require("./routes/users");
 
 const apiAdminRouter = require("./api/routes/admin.routes");
 const apiUserRouter = require("./api/routes/user.routes");
+const adminConfigRouter = require("./api/routes/config.routes");
 
 const { Cookie } = require("express-session");
 
 var app = express();
 
+app.use(
+  cors({
+    origin: "http://localhost:5173", // frontend
+    credentials: true, // 🔥 required for sessions
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
+
+// Allow preflight requests
+app.options("*", cors());
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
@@ -57,9 +70,9 @@ app.use(
 
 app.use("/", usersRouter);
 app.use("/admin", adminRouter);
-app.use("/api/user", apiUserRouter);
+app.use("/api/users", apiUserRouter);
 app.use("/api/admin", apiAdminRouter);
-
+app.use("/api/config", adminConfigRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

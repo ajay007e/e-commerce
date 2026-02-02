@@ -16,6 +16,7 @@ api.interceptors.response.use(
     // Example: handle unauthorized globally later
     if (error.response?.status === 401) {
       // placeholder — no redirect yet
+      // window.location.href = "/login";
       console.warn("Unauthorized");
     }
     return Promise.reject(error);

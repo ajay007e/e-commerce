@@ -6,7 +6,7 @@ export interface AuthFieldError {
 }
 
 export interface AuthFormState {
-  name: string;
+  name?: string;
   email: string;
   password: string;
 }

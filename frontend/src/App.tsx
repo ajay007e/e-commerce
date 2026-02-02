@@ -3,6 +3,7 @@ import { AuthProvider } from "@/context/auth.context";
 
 import ProtectedRoute from "@/routes/protected.routes";
 import PublicRoute from "@/routes/public.routes";
+import AdminRoute from "@/routes/admin.routes";
 
 // Pages
 import Home from "@/pages/Home";
@@ -19,14 +20,27 @@ import ShippingPolicyPage from "@/pages/ShippingPolicyPage";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import TermsAndConditionsPage from "@/pages/TermsAndConditionsPage";
 
+// Admin pages
+import AdminDashboard from "@/pages/admin/Dashboard";
+import AdminProducts from "@/pages/admin/Products";
+import AdminOrders from "@/pages/admin/Orders";
+import AdminUsers from "@/pages/admin/Users";
+import AdminSettings from "@/pages/admin/Settings";
+import HomepageSettings from "@/pages/admin/settings/HomepageSettings";
+import HomepageHeroEditor from "@/pages/admin/settings/HomepageHeroEditor";
+import HomepageShowcaseEditor from "@/pages/admin/settings/HomepageShowcaseEditor";
+import PagesSettings from "@/pages/admin/settings/PageSettings";
+import GlobalConfig from "@/pages/admin/settings/GlobalConfig";
+
 // Layouts
 import GuestLayout from "@/layouts/guest.layout";
 import AppLayout from "@/layouts/app.layout";
+import AdminLayout from "@/layouts/admin.layout";
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
         <Routes>
           {/* Guest area */}
           <Route element={<GuestLayout />}>
@@ -37,12 +51,9 @@ export default function App() {
             <Route path="/terms" element={<TermsAndConditionsPage />} />
             <Route path="/shipping" element={<ShippingPolicyPage />} />
             <Route path="/refund" element={<RefundAndReturnPolicyPage />} />
-            <Route path="/p/:productId" element={<ProductPage />} />{" "}
+            <Route path="/p/:productId" element={<ProductPage />} />
             <Route path="/s" element={<ShopPage />} />
-            <Route
-              path="/return-policy"
-              element={<RefundAndReturnPolicyPage />}
-            />
+
             <Route
               path="/login"
               element={
@@ -51,6 +62,7 @@ export default function App() {
                 </PublicRoute>
               }
             />
+
             <Route
               path="/reset-password"
               element={
@@ -60,7 +72,8 @@ export default function App() {
               }
             />
           </Route>
-          {/* Logged-in app */}
+
+          {/* User app */}
           <Route
             path="/app"
             element={
@@ -72,8 +85,35 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="cart" element={<Cart />} />
           </Route>
+
+          {/* Admin app */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="users" element={<AdminUsers />} />
+            <Route path="settings" element={<AdminSettings />} />
+            <Route path="settings/homepage" element={<HomepageSettings />} />
+            <Route
+              path="settings/homepage/hero"
+              element={<HomepageHeroEditor />}
+            />
+            <Route
+              path="settings/homepage/showcase"
+              element={<HomepageShowcaseEditor />}
+            />
+            <Route path="settings/pages" element={<PagesSettings />} />
+            <Route path="settings/config" element={<GlobalConfig />} />
+          </Route>
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

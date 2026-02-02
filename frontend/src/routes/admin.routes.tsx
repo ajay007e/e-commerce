@@ -1,7 +1,8 @@
+
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/context/auth.context";
 
-export default function ProtectedRoute({
+export default function AdminRoute({
   children,
 }: {
   children: JSX.Element;
@@ -14,9 +15,8 @@ export default function ProtectedRoute({
     return <Navigate to="/login" replace />;
   }
 
-  // ❌ admin trying to access /app
-  if (user.isAdmin) {
-    return <Navigate to="/admin" replace />;
+  if (!user.isAdmin) {
+    return <Navigate to="/app" replace />;
   }
 
   return children;

@@ -3,6 +3,7 @@ import type { AuthContextValue } from "./context.types";
 import type { User } from "@/types";
 import * as authApi from "@/api/auth.api";
 import * as productApi from "@/api/product.api";
+import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
@@ -10,12 +11,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  // Restore session on page refresh
+  const navigate = useNavigate();
+
   useEffect(() => {
     const restoreSession = async () => {
       try {
-        const res = await productApi.getHomeProducts();
-        setUser(res.data.data.user);
+        const res = await authApi.me();
+        setUser(res.data.user);
       } catch {
         setUser(null);
       } finally {
@@ -28,12 +30,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const login = async (email: string, password: string): Promise<void> => {
     const res = await authApi.login({ email, password });
-    setUser(res.data.data);
+    const { user } = res.data;
+    setUser(user);
+
+    if (user.isAdmin) {
+      navigate("/admin");
+    } else {
+      navigate("/app");
+    }
   };
 
   const signup = async (data: Partial<User>): Promise<void> => {
     const res = await authApi.signup(data);
-    setUser(res.data.data);
+    const { user } = res.data;
+    console.log(user);
+    setUser(user);
   };
 
   const logout = async (): Promise<void> => {

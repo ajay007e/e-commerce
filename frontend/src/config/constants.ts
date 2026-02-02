@@ -10,3 +10,18 @@ export const SORT_OPTIONS: {
 
 export const VALID_PAGE_SIZES = [10, 25, 50, 100];
 export const DEFAULT_PAGE_SIZE = 25;
+
+export const BREADCRUMB_LABELS: Record<string, string> = {
+  admin: "Dashboard",
+  products: "Products",
+  orders: "Orders",
+  users: "Users",
+  settings: "Settings",
+  homepage: "Homepage",
+  hero: "Hero",
+  featured: "Featured",
+  visibility: "Visibility",
+  pages: "Pages",
+  config: "Global Config",
+  showcase: "Showcase",
+};
