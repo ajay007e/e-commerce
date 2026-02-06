@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { AuthContextValue } from "./context.types";
 import type { User } from "@/types";
 import * as authApi from "@/api/auth.api";
-import * as productApi from "@/api/product.api";
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -33,6 +32,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { user } = res.data;
     setUser(user);
 
+    console.log(user);
     if (user.isAdmin) {
       navigate("/admin");
     } else {

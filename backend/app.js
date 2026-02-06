@@ -19,14 +19,14 @@ const apiAdminRouter = require("./api/routes/admin.routes");
 const apiUserRouter = require("./api/routes/user.routes");
 const adminConfigRouter = require("./api/routes/config.routes");
 
-const { Cookie } = require("express-session");
+const v1Router = require("./api/routes/v1/v1.routes");
 
 var app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // frontend
-    credentials: true, // 🔥 required for sessions
+    origin: "http://localhost:5173",
+    credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
@@ -34,6 +34,7 @@ app.use(
 
 // Allow preflight requests
 app.options("*", cors());
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "hbs");
@@ -59,12 +60,20 @@ db.connect((err) => {
   if (err) console.error("Error connecting to database", err);
   else console.log("Connected to database at port 27017");
 });
+
 app.use(
   session({
-    secret: "secret",
-    cookie: { maxAge: 60 * 60 * 1000 * 24 },
-    resave: true,
-    saveUninitialized: true,
+    // name: "sid",
+    secret: process.env.SESSION_SECRET || "my_super_secret_key",
+    resave: false,
+    saveUninitialized: false,
+
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    },
   }),
 );
 
@@ -73,6 +82,8 @@ app.use("/admin", adminRouter);
 app.use("/api/users", apiUserRouter);
 app.use("/api/admin", apiAdminRouter);
 app.use("/api/config", adminConfigRouter);
+
+app.use("/api/v1", v1Router);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

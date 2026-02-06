@@ -26,11 +26,6 @@ import AdminProducts from "@/pages/admin/Products";
 import AdminOrders from "@/pages/admin/Orders";
 import AdminUsers from "@/pages/admin/Users";
 import AdminSettings from "@/pages/admin/Settings";
-import HomepageSettings from "@/pages/admin/settings/HomepageSettings";
-import HomepageHeroEditor from "@/pages/admin/settings/HomepageHeroEditor";
-import HomepageShowcaseEditor from "@/pages/admin/settings/HomepageShowcaseEditor";
-import PagesSettings from "@/pages/admin/settings/PageSettings";
-import GlobalConfig from "@/pages/admin/settings/GlobalConfig";
 
 // Layouts
 import GuestLayout from "@/layouts/guest.layout";
@@ -100,17 +95,6 @@ export default function App() {
             <Route path="orders" element={<AdminOrders />} />
             <Route path="users" element={<AdminUsers />} />
             <Route path="settings" element={<AdminSettings />} />
-            <Route path="settings/homepage" element={<HomepageSettings />} />
-            <Route
-              path="settings/homepage/hero"
-              element={<HomepageHeroEditor />}
-            />
-            <Route
-              path="settings/homepage/showcase"
-              element={<HomepageShowcaseEditor />}
-            />
-            <Route path="settings/pages" element={<PagesSettings />} />
-            <Route path="settings/config" element={<GlobalConfig />} />
           </Route>
         </Routes>
       </AuthProvider>

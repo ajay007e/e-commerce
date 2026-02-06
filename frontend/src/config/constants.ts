@@ -14,8 +14,10 @@ export const DEFAULT_PAGE_SIZE = 25;
 export const BREADCRUMB_LABELS: Record<string, string> = {
   admin: "Dashboard",
   products: "Products",
+  categories: "Categories",
   orders: "Orders",
   users: "Users",
+  sizes: "Sizes",
   settings: "Settings",
   homepage: "Homepage",
   hero: "Hero",

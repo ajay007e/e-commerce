@@ -1,9 +1,9 @@
 import axios from "axios";
-import { API_BASE_URL } from "./config";
+import { API_BASE_URL, API_VERSION } from "./config";
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: true, // important for session-based auth
+  baseURL: `${API_BASE_URL}/api/${API_VERSION}`,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },

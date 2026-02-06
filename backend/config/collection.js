@@ -4,4 +4,7 @@ module.exports = {
   CARTS_COLLECTION: "carts",
   ORDERS_COLLECTION: "orders",
   CONFIGS_COLLECTION: "configs",
+  CATEGORIES_COLLECTION: "categories",
+  SIZES_COLLECTION: "sizes",
+  COUPONS_COLLECTION: "coupons",
 };

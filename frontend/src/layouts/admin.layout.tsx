@@ -1,10 +1,12 @@
 import { Outlet, NavLink } from "react-router-dom";
+import { useState } from "react";
 import {
   FaTachometerAlt,
   FaBoxOpen,
   FaUsers,
   FaClipboardList,
   FaCog,
+  FaChevronDown,
 } from "react-icons/fa";
 import { HiOutlineUserCircle } from "react-icons/hi2";
 import { useAuth } from "@/context/auth.context";
@@ -16,7 +18,6 @@ export default function AdminLayout() {
   return (
     <div className="h-screen flex bg-gray-100 overflow-hidden">
       {/* Sidebar */}
-
       <aside className="w-64 h-screen bg-gray-900 text-white flex flex-col">
         {/* Logo */}
         <div className="px-6 py-4 border-b border-gray-700 text-lg font-semibold">
@@ -29,9 +30,7 @@ export default function AdminLayout() {
             Dashboard
           </AdminNavLink>
 
-          <AdminNavLink to="/admin/products" icon={<FaBoxOpen />}>
-            Products
-          </AdminNavLink>
+          <CatalogNavGroup />
 
           <AdminNavLink to="/admin/orders" icon={<FaClipboardList />}>
             Orders
@@ -48,9 +47,8 @@ export default function AdminLayout() {
 
         {/* Footer */}
         <div className="px-4 py-4 border-t border-gray-700">
-          <div className="flex items-center text-center justify-center gap-2 mb-3 text-sm">
-            <HiOutlineUserCircle className="w-6 h-6" />
-            <span>{user?.name}</span>
+          <div className="flex items-center justify-center gap-2 mb-3 text-sm">
+            <span>{user?.email}</span>
           </div>
 
           <button
@@ -62,16 +60,25 @@ export default function AdminLayout() {
         </div>
       </aside>
 
-      {/* Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        <main className="flex-1 p-6 overflow-y-auto">
+        {/* Fixed Header */}
+
+        <div className="sticky top-6 z-20 bg-gray-100 px-6">
           <AdminBreadcrumb />
+        </div>
+
+        {/* Scrollable Content */}
+        <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>
       </div>
     </div>
   );
 }
+
+/* ============================= */
+/* Navigation Components         */
+/* ============================= */
 
 function AdminNavLink({
   to,
@@ -98,5 +105,64 @@ function AdminNavLink({
       {icon}
       {children}
     </NavLink>
+  );
+}
+
+function AdminSubNavLink({
+  to,
+  children,
+}: {
+  to: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        `block px-3 py-2 rounded text-sm transition
+        ${
+          isActive
+            ? "bg-gray-800 text-white"
+            : "text-gray-400 hover:bg-gray-800 hover:text-white"
+        }`
+      }
+    >
+      {children}
+    </NavLink>
+  );
+}
+
+function CatalogNavGroup() {
+  const [open, setOpen] = useState(true);
+
+  return (
+    <div>
+      {/* Catalog Header */}
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center justify-between w-full px-3 py-2 text-sm rounded
+        text-gray-300 hover:bg-gray-800 hover:text-white transition"
+      >
+        <div className="flex items-center gap-3">
+          <FaBoxOpen />
+          <span>Catalog</span>
+        </div>
+
+        <FaChevronDown
+          className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {/* Catalog Items */}
+      {open && (
+        <div className="ml-8 mt-1 space-y-1">
+          <AdminSubNavLink to="/admin/products">Products</AdminSubNavLink>
+
+          {/*<AdminSubNavLink to="/admin/categories">Categories</AdminSubNavLink>*/}
+
+          {/*<AdminSubNavLink to="/admin/sizes">Sizes</AdminSubNavLink>*/}
+        </div>
+      )}
+    </div>
   );
 }
