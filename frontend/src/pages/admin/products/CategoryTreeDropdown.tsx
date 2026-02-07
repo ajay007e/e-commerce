@@ -1,65 +1,129 @@
 import { useEffect, useState } from "react";
-import type { Category } from "./types";
+
+import { Select } from "@/components/ui/Input";
 import { getCategories } from "@/api/categories.api";
 
-interface Props {
-  value: string | null;
-  onChange: (id: string | null) => void;
-  error?: string;
-  label?: string;
+/* ---------------------------------------------
+   Types
+--------------------------------------------- */
+
+interface Category {
+  _id: string;
+  name: string;
+  parentId?: string | null;
+  children?: Category[];
 }
 
-const selectBase = `
-  h-10 w-full rounded-md border border-gray-300
-  bg-white px-3 text-sm
-  text-gray-900
-  transition
-  focus:outline-none
-  focus:ring-2 focus:ring-blue-500
-  focus:border-blue-500
-`;
+interface Option {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
 
-export default function CategoryTreeDropdown({
-  value,
-  onChange,
-  error,
-  label = "Category",
-}: Props) {
-  const [categories, setCategories] = useState<Category[]>([]);
+/* ---------------------------------------------
+   Helpers
+--------------------------------------------- */
+
+/* Build Tree */
+const buildTree = (list: Category[]) => {
+  const map = new Map<string, Category>();
+
+  list.forEach((cat) => {
+    map.set(cat._id, { ...cat, children: [] });
+  });
+
+  const roots: Category[] = [];
+
+  map.forEach((cat) => {
+    if (cat.parentId && map.has(cat.parentId)) {
+      map.get(cat.parentId)!.children!.push(cat);
+    } else {
+      roots.push(cat);
+    }
+  });
+
+  return roots;
+};
+
+/* Flatten Tree for Dropdown */
+const flattenTree = (nodes: Category[], level = 0): Option[] => {
+  let result: Option[] = [];
+
+  nodes.forEach((node) => {
+    const isLeaf = !node.children || node.children.length === 0;
+
+    result.push({
+      label: `${"— ".repeat(level)}${node.name}`,
+      value: node._id,
+      disabled: !isLeaf, // Only leaf selectable
+    });
+
+    if (node.children?.length) {
+      result = result.concat(flattenTree(node.children, level + 1));
+    }
+  });
+
+  return result;
+};
+
+/* ---------------------------------------------
+   Component
+--------------------------------------------- */
+
+interface Props {
+  value?: string;
+  onChange?: (e: any) => void;
+}
+
+export default function CategoryTreeDropdown({ value, onChange }: Props) {
+  const [options, setOptions] = useState<Option[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  /* ---------------------------------------------
+     Load Categories
+  --------------------------------------------- */
 
   useEffect(() => {
     const load = async () => {
-      const data = await getCategories();
-      setCategories(data);
+      try {
+        setLoading(true);
+
+        const res = await getCategories();
+
+        const tree = buildTree(res);
+
+        const flat = flattenTree(tree);
+
+        setOptions(flat);
+      } catch (err) {
+        console.error("Load categories failed:", err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     load();
   }, []);
 
+  /* ---------------------------------------------
+     Render
+  --------------------------------------------- */
+
   return (
-    <div className="space-y-1">
-      {/* Label */}
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
+    <Select
+      label="Category"
+      value={value || ""}
+      onChange={onChange}
+      disabled={loading}
+      options={[
+        {
+          label: loading ? "Loading categories..." : "Select category",
+          value: "",
+          disabled: true,
+        },
 
-      {/* Select */}
-      <select
-        value={value ?? ""}
-        onChange={(e) => onChange(e.target.value || null)}
-        className={selectBase}
-      >
-        <option value="">Select category</option>
-
-        {categories
-          .filter((c) => !c.children || c.children.length === 0)
-          .map((c) => (
-            <option key={c._id} value={c._id}>
-              {c.name}
-            </option>
-          ))}
-      </select>
-
-      {/* Error */}
-      {error && <p className="text-xs text-red-500">{error}</p>}
-    </div>
+        ...options,
+      ]}
+    />
   );
 }

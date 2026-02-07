@@ -35,7 +35,7 @@ function StepNavigation({
   setCurrentStep: (n: number) => void;
   onFinish: () => void;
 }) {
-  const { errors, values } = useFormContext();
+  const { errors, submit } = useFormContext();
 
   const isLast = currentStep === steps.length - 1;
 
@@ -60,8 +60,8 @@ function StepNavigation({
 
       {isLast ? (
         <button
-          type="submit"
-          onClick={onFinish}
+          type="button"
+          onClick={submit}
           className="rounded-md bg-blue-600 px-5 py-2 text-sm text-white hover:bg-blue-700"
         >
           Submit

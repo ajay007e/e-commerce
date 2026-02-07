@@ -1,4 +1,5 @@
 import { forwardRef, InputHTMLAttributes, useId } from "react";
+
 import { cn } from "../utils/cn";
 
 interface SwitchProps extends Omit<
@@ -10,7 +11,7 @@ interface SwitchProps extends Omit<
 }
 
 export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
-  ({ label, error, className, id, disabled, ...props }, ref) => {
+  ({ label, error, id, disabled, ...props }, ref) => {
     const switchId = id ?? useId();
 
     return (
@@ -18,38 +19,44 @@ export const Switch = forwardRef<HTMLInputElement, SwitchProps>(
         <label
           htmlFor={switchId}
           className={cn(
-            "flex items-center gap-3 cursor-pointer text-sm text-gray-700",
-
+            "flex items-center gap-3 cursor-pointer text-sm text-gray-700 select-none",
             disabled && "opacity-50 cursor-not-allowed",
           )}
         >
-          {/* Hidden Input */}
+          {/* Hidden Checkbox */}
           <input
             ref={ref}
             id={switchId}
             type="checkbox"
             disabled={disabled}
-            className="peer sr-only"
+            className="sr-only peer"
             {...props}
           />
 
-          {/* Track */}
+          {/* Track (GROUP) */}
           <div
             className={cn(
-              "relative h-6 w-11 rounded-full bg-gray-300 transition-colors",
+              "relative h-6 w-11 rounded-full",
+              "bg-gray-300 transition-colors duration-200",
 
               "peer-checked:bg-blue-600",
               "peer-focus:ring-2 peer-focus:ring-blue-500",
 
               error && "bg-red-500",
+
+              // 👇 Make this a group
+              "group",
             )}
           >
-            {/* Thumb */}
+            {/* Thumb (uses GROUP) */}
             <div
               className={cn(
-                "absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform",
+                "absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow",
 
-                "peer-checked:translate-x-5",
+                "transition-all duration-200 ease-in-out",
+
+                // ✅ Move using group
+                "group-peer-checked:left-[22px]",
               )}
             />
           </div>

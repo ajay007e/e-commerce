@@ -25,7 +25,7 @@ module.exports = {
               price: product.price,
               description: product.description,
             },
-          }
+          },
         )
         .then((res) => {
           resolve();

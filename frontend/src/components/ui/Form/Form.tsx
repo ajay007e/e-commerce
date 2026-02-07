@@ -15,6 +15,7 @@ interface FormContextType {
   setValue: (name: string, value: any) => void;
   setError: (name: string, error: string | null) => void;
 
+  submit: () => void;
   register: (name: string) => {
     value: any;
     onChange: (e: any) => void;
@@ -124,6 +125,12 @@ export function Form({
     onSubmit(values);
   };
 
+  const submit = () => {
+    if (!validate()) return;
+
+    onSubmit(values);
+  };
+
   /* ---------------- Provider ---------------- */
 
   return (
@@ -134,9 +141,13 @@ export function Form({
         setValue,
         setError,
         register,
+        submit,
       }}
     >
-      <form onSubmit={handleSubmit} className="h-full flex flex-col">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="h-full flex flex-col"
+      >
         {children}
       </form>
     </FormContext.Provider>

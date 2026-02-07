@@ -158,9 +158,9 @@ function CatalogNavGroup() {
         <div className="ml-8 mt-1 space-y-1">
           <AdminSubNavLink to="/admin/products">Products</AdminSubNavLink>
 
-          {/*<AdminSubNavLink to="/admin/categories">Categories</AdminSubNavLink>*/}
+          <AdminSubNavLink to="/admin/categories">Categories</AdminSubNavLink>
 
-          {/*<AdminSubNavLink to="/admin/sizes">Sizes</AdminSubNavLink>*/}
+          <AdminSubNavLink to="/admin/attributes">Attributes</AdminSubNavLink>
         </div>
       )}
     </div>

@@ -20,6 +20,8 @@ module.exports = {
             .collection(collections.CATEGORIES_COLLECTION)
             .insertOne({
               name: data.name,
+              parentId: data.parentId,
+              slug: data.slug,
               createdAt: new Date(),
             });
         })
@@ -43,6 +45,8 @@ module.exports = {
           {
             $set: {
               name: data.name,
+              parentId: data.parentId,
+              slug: data.slug,
               updatedAt: new Date(),
             },
           },

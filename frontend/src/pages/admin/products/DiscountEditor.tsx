@@ -15,13 +15,9 @@ interface Props {
 }
 
 export default function DiscountEditor({ value, onChange }: Props) {
-  const discount: DiscountValue = value ?? {
-    enabled: false,
-    type: "PERCENT",
-    value: "",
-    startAt: "",
-    endAt: "",
-  };
+  if (!value) return null;
+
+  const discount = value;
 
   const update = (patch: Partial<DiscountValue>) => {
     onChange({

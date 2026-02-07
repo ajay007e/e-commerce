@@ -1,15 +1,38 @@
 import api from "./axios";
 import type { Product } from "./types";
 
-export const getProducts = async (params: any) => {
-  const res = await api.get("/api/admin/products", { params });
+/* =====================================
+   Get Products
+===================================== */
+
+export const getProducts = async (params?: any) => {
+  const res = await api.get<Product[]>("/products", {
+    params,
+  });
+
   return res.data;
 };
 
-export const createProduct = async (data: Partial<Product>) => {
-  return api.post("/api/admin/products", data);
+/* =====================================
+   Create (Multipart)
+===================================== */
+
+export const createProduct = async (data: FormData) => {
+  const res = await api.post<Product>("/admin/products", data, {});
+
+  return res.data;
 };
 
-export const updateProduct = async (id: string, data: Partial<Product>) => {
-  return api.put(`/api/admin/products/${id}`, data);
+/* =====================================
+   Update (Multipart)
+===================================== */
+
+export const updateProduct = async (id: string, data: FormData) => {
+  const res = await api.put<Product>(`/admin/products/${id}`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return res.data;
 };

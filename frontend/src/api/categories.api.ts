@@ -7,9 +7,9 @@ export const getCategories = async (): Promise<Category[]> => {
 };
 
 export const createCategory = async (data: Partial<Category>) => {
-  return api.post("/categories", data);
+  return api.post("/admin/categories", data);
 };
 
 export const updateCategory = async (id: string, data: Partial<Category>) => {
-  return api.put(`/categories/${id}`, data);
+  return api.put(`/admin/categories/${id}`, data);
 };

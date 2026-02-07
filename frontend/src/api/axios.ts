@@ -4,9 +4,6 @@ import { API_BASE_URL, API_VERSION } from "./config";
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api/${API_VERSION}`,
   withCredentials: true,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 // 🔮 Future-ready: interceptors (JWT, global errors)
